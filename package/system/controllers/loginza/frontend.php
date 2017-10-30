@@ -33,16 +33,21 @@ class loginza extends cmsFrontend {
         }
 
         // ищем такого пользователя
-        $auth_token = $this->model->getUserByIdentity($profile->identity);
+        $user_id = $this->model->getUserByIdentity($profile->identity);
+        
         // если пользователя нет, создаем
-        if (empty($auth_token)){
-            $auth_token = $this->model->createUser($profile,$group_id);
-			if(!$auth_token)
+        if (!$user_id){
+            $user_id = $this->model->createUser($profile, $group_id);
+			if(!$user_id)
 				header('Location: /loginza/error');
         }
+
+        $auth_token = $this->model->getToken($user_id, $profile->identity);
+
         // если пользователь уже был или успешно создан, авторизуем
         if (!empty($auth_token))
             cmsUser::autoLogin($auth_token);
+		
 		header('Location: /');
 	}
 

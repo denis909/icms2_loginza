@@ -1,6 +1,19 @@
 <?php
 class modelLoginza extends cmsModel {
 
+    public function getToken($user_id, $token)
+    {
+        $users_model = cmsCore::getModel('users');
+        
+        $auth_token = md5($token);
+        
+        $users_model->deleteAuthToken($auth_token);
+        
+        $users_model->setAuthToken($user_id, $auth_token);
+        
+        return $auth_token;
+    }
+
     public function checkOpenId(){
 
         $inDB = cmsDatabase::getInstance();
@@ -14,11 +27,11 @@ class modelLoginza extends cmsModel {
 	
 	public function getUserByIdentity($identity){
         $inDB   = cmsDatabase::getInstance();
-		$token = $inDB->getField('users', "openid='{$identity}'", 'openid');
-		if(empty($token))
+		$user_id = $inDB->getField('users', "openid='{$identity}'", 'id');
+		if(!$user_id)
 			return false;
 		else
-			return md5($token);
+			return $user_id;
     }
 	
 	public function loginzaRequest($url) {
@@ -115,16 +128,19 @@ class modelLoginza extends cmsModel {
 			'password_salt' => $password_salt,
 			'nickname'=> $nickname,
 			'groups' => '---' . PHP_EOL . '- '.$group_id,
-			'auth_token' => md5($profile->identity),
 			'email' => $email,
 			'birth_date' => $birthdate,
 			'openid' => $profile->identity,
-			'date_reg' => date('Y-m-d'),
+			'date_reg' => date('Y-m-d')
 		);
+
+        $user_id = $this->insert('{users}', $user);
 	
-		if($this->insert('{users}', $user)){
-			return md5($profile->identity);
+		if($user_id){
+			return $user_id;
 		}
+
+        return false;
     }
 
 }
