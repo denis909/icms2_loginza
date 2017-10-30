@@ -1,0 +1,2 @@
+ALTER TABLE `{#}users` ADD `openid` VARCHAR( 250 ) NULL, ADD INDEX ( `openid` );
+INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`) VALUES ('', 'loginza', 'Loginza', 'CozaNostra', 'http://cn13.ru', '1.0.2');
