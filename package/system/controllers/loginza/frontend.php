@@ -18,7 +18,7 @@ class loginza extends cmsFrontend {
         $inDB   = cmsDatabase::getInstance();
         
         $token = $this->request->get('token','');
-		$group_id = $this->request->get('group_id',4);
+		$group_id = 3;
 
         $loginza_api_url = 'http://loginza.ru/api/authinfo';
 
