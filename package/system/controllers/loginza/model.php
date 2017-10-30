@@ -114,14 +114,18 @@ class modelLoginza extends cmsModel {
         }else{ 
 		    $email = substr(md5($profile->identity),0,6).'@'.$_SERVER['HTTP_HOST'];
 		}
+
+        $birthdate = null;
+
+        if ($profile->dob)
+        {
+            $time = strtotime($profile->dob);
         
-		
-		//День рождения
-		if (isset($profile->dob)) { 
-			$birthdate  = date('Y-m-d',strtotime($profile->dob)); 
-		} else { 
-			$birthdate = date('Y-m-d',strtotime(date('Y-m-d').' -18 year')); 
-		}
+            if (1970 < date('Y', $time))
+            {
+                $birthdate = date('Y-m-d', $time);
+            }
+        }
 		
 		$user = array(
 			'password' => md5(md5($password) . $password_salt),
