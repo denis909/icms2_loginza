@@ -42,6 +42,8 @@ class loginza extends cmsFrontend {
 				header('Location: /loginza/error');
         }
 
+        cmsEventsManager::hook('loginza', $user_id, $profile);
+
         $auth_token = $this->model->getToken($user_id, $profile->identity);
 
         // если пользователь уже был или успешно создан, авторизуем
